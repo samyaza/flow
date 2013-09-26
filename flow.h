@@ -36,10 +36,10 @@ class BaseQueue{
         int size(){return this->_size;}        
 };
 template<class T> BaseQueue<T>::BaseQueue(){
-    front = new Node<T>();
-    front->setData(0);
-    front->setNext(front);
-    back = front;
+//    front = new Node<T>();
+//    front->setData(0);
+//    front->setNext(front);
+//    back = front;
     _size = 0;
 }
 template<class T> BaseQueue<T>::~BaseQueue(){
