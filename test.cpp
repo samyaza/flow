@@ -23,8 +23,11 @@ int main(int argc, char** argv) {
     cout << test.get() << endl;
     test.put(30);
     test.put(40);
+    test.put(45);
     cout << test.get() << endl;
     cout << test.get() << endl;
+    cout << test.get() <<endl;
+    cout <<"DONE";
     return 0;
 }
 

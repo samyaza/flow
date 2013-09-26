@@ -1,3 +1,7 @@
+#include <iostream>
+
+using namespace std;
+
 template<class T>
 class Node{
     private:
@@ -42,8 +46,10 @@ template<class T> BaseQueue<T>::~BaseQueue(){
     while(_size>0 && this->get());
 }
 template<class T> void BaseQueue<T>::put(T data){
-    if(this->isEmpty())
+    if(this->isEmpty()){
         front = new Node<T>(data,back);
+        back = front;
+    } 
     else{
         back->setNext(new Node<T>(data,0));
         back = back->getNext();
