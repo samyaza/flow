@@ -22,30 +22,27 @@ template<class T> Node<T>::Node(T data, Node<T>* next){
     this->next = next;
 }
 template<class T>
-class BaseQueue{    
+class FlowQueue{    
     private:
         Node<T>* front;
         Node<T>* back;
         int _size;
     public:
-        BaseQueue();
-        ~BaseQueue();
+        FlowQueue();
+        ~FlowQueue();
         virtual T get();
         virtual void put(T data);
         bool isEmpty(){return (this->_size == 0)? true :  false;}
         int size(){return this->_size;}        
 };
-template<class T> BaseQueue<T>::BaseQueue(){
-//    front = new Node<T>();
-//    front->setData(0);
-//    front->setNext(front);
-//    back = front;
+template<class T> FlowQueue<T>::FlowQueue(){
     _size = 0;
 }
-template<class T> BaseQueue<T>::~BaseQueue(){
-    while(_size>0 && this->get());
+template<class T> FlowQueue<T>::~FlowQueue(){
+    while(_size>0)
+        this->get();
 }
-template<class T> void BaseQueue<T>::put(T data){
+template<class T> void FlowQueue<T>::put(T data){
     if(this->isEmpty()){
         front = new Node<T>(data,back);
         back = front;
@@ -56,7 +53,7 @@ template<class T> void BaseQueue<T>::put(T data){
     }
     _size++;
 }
-template<class T> T BaseQueue<T>::get(){
+template<class T> T FlowQueue<T>::get(){
     while(_size==0);
     T ret = front->getData();
     Node<T>* temp = front;
