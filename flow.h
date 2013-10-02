@@ -11,6 +11,8 @@ class Node{
         Node();
         Node(T,Node<T>*);
     template<class U> friend class FlowQueue;
+	template<class U> friend class FlowProducer;
+	template<class U> friend class FlowConsumer;
 };
 template<class T> Node<T>::Node(){
 }
@@ -19,7 +21,7 @@ template<class T> Node<T>::Node(T data, Node<T>* next){
     this->next = next;
 }
 template<class T>class FlowQueue{  
-    template<class U> friend class FlowProducer;
+    
     private:
         Node<T>* front;
         Node<T>* back;
@@ -29,45 +31,50 @@ template<class T>class FlowQueue{
     public:
         FlowQueue();
         ~FlowQueue();
-        bool isEmpty(){return (this->_size == 0)? true :  false;}
+        bool isEmpty(){return (this->_size == 0)? true : false;}
         int size(){return this->_size;}        
 };
 template<class T> FlowQueue<T>::FlowQueue(){
     _size = 0;
+	front = new Node();
+	back = front;
 }
 template<class T> FlowQueue<T>::~FlowQueue(){
-    while(_size>0)
+    while(_size>=0)
         this->get();
 }
-template<class T> void FlowQueue<T>::put(T data){
-    if(this->isEmpty()){
-        front = new Node<T>(data,back);
-        back = front;
-    } 
-    else{
-        back->next = new Node<T>(data,0);
-        back = back->next;
-    }
-    _size++;
-}
-template<class T> T FlowQueue<T>::get(){
-    while(_size==0);
+
+template<class T> class FlowConsumer{
+    private:
+        int* _size;
+		Node<T>* front;
+    public:
+         FlowProducer(int* size,Node<T>* queue_front):_size(size),back(queue_front);
+         T get();
+};
+
+template<class T> T FlowConsumer<T>::get(){
+    while(*_size==0);
     T ret = front->data;
     Node<T>* temp = front;
     front = front->next;
     delete temp;
-    _size--;
+    *_size--;
     return ret;
 }
 
 template<class T> class FlowProducer{
     private:
-        FlowQueue* master;
+        int* _size;
+		Node<T>* back;
     public:
-         FlowProducer(FlowQueue*);
+         FlowProducer(int* size,Node<T>* queue_back):_size(size),back(queue_back);
          void put(T data);
 };
 
 template<class T> void FlowProducer<T>::put(T data){
-    master->put(data);
+	back->data = data;
+	back->next = new Node<T>();
+	back = back->next;
+    *_size++;
 }
