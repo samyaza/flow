@@ -10,10 +10,7 @@ class Node{
     public:
         Node();
         Node(T,Node<T>*);
-        T getData(){return data;}
-        void setData(T data){this->data = data;}
-        Node* getNext(){return next;}
-        void setNext(Node *next){this->next = next;}
+    template<class U> friend class FlowQueue;
 };
 template<class T> Node<T>::Node(){
 }
@@ -21,17 +18,17 @@ template<class T> Node<T>::Node(T data, Node<T>* next){
     this->data = data;
     this->next = next;
 }
-template<class T>
-class FlowQueue{    
+template<class T>class FlowQueue{  
+    template<class U> friend class FlowProducer;
     private:
         Node<T>* front;
         Node<T>* back;
         int _size;
+        T get();
+        void put(T data);
     public:
         FlowQueue();
         ~FlowQueue();
-        virtual T get();
-        virtual void put(T data);
         bool isEmpty(){return (this->_size == 0)? true :  false;}
         int size(){return this->_size;}        
 };
@@ -48,17 +45,29 @@ template<class T> void FlowQueue<T>::put(T data){
         back = front;
     } 
     else{
-        back->setNext(new Node<T>(data,0));
-        back = back->getNext();
+        back->next = new Node<T>(data,0);
+        back = back->next;
     }
     _size++;
 }
 template<class T> T FlowQueue<T>::get(){
     while(_size==0);
-    T ret = front->getData();
+    T ret = front->data;
     Node<T>* temp = front;
-    front = front->getNext();
+    front = front->next;
     delete temp;
     _size--;
     return ret;
+}
+
+template<class T> class FlowProducer{
+    private:
+        FlowQueue* master;
+    public:
+         FlowProducer(FlowQueue*);
+         void put(T data);
+};
+
+template<class T> void FlowProducer<T>::put(T data){
+    master->put(data);
 }
