@@ -12,14 +12,17 @@ void print_function(FlowQueue<string> *que,int id){
 }
 
 int main(int argc, char** argv) {
-    cout << "TET";
-//    FlowQueue<string> test; 
+    FlowQueue<string> test; 
 //    
-//    auto pro = test.get_producer();
-//    pro.put("Test");
-//    cout << "hee";
-//    auto con = test.get_consumer();
-//    cout << con.get() << endl;
+    auto pro = test.get_producer();
+     pro.put("Test");
+	 pro.put("NEW");
+     auto con = test.get_consumer();
+     cout << con.get() << endl;
+	cout << con.get() << endl;
+	pro.put("Test");
+	
+
 //    thread t1(print_function, &test,1);
 //    thread t2(print_function, &test,2);
 //    string out;
